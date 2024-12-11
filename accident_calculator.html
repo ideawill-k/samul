@@ -151,6 +151,14 @@
             font-weight: 500;
         }
 
+        .selection-summary {
+            background-color: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.875rem;
+        }
+
         .submit-btn {
             width: 100%;
             padding: 12px;
@@ -166,23 +174,13 @@
         .submit-btn:hover {
             background-color: #2563eb;
         }
-
-        .selection-summary {
-            background-color: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 0.875rem;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1 class="title">예상합의금 계산하기</h1>
-            <button type="button" class="btn" onclick="resetForm()">
-                초기화
-            </button>
+            <button type="button" class="btn" onclick="resetForm()">초기화</button>
         </div>
 
         <form id="calculatorForm" onsubmit="handleSubmit(event)">
