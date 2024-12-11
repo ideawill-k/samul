@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>교통사고 합의금 계산기</title>
     <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-light: #EEF2FF;
+            --secondary: #6B7280;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --background: #F9FAFB;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --border: #E5E7EB;
+            --border-focus: #A5B4FC;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,41 +30,85 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             line-height: 1.5;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: var(--background);
+            color: var(--text);
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .title {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 600;
+            color: var(--text);
+        }
+
+        .notice-box {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .notice-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .notice-box ul {
+            list-style: none;
+            padding-left: 24px;
+        }
+
+        .notice-box li {
+            position: relative;
+            font-size: 0.875rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .notice-box li:before {
+            content: "•";
+            position: absolute;
+            left: -16px;
+            color: var(--primary);
         }
 
         .section {
+            background: white;
+            padding: 20px;
             margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .section-title {
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 12px;
-            color: #1f2937;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
         }
 
         .input-group {
@@ -62,14 +121,22 @@
             font-size: 0.875rem;
             font-weight: 500;
             margin-bottom: 8px;
+            color: var(--text);
         }
 
         .input {
             width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.2);
         }
 
         .input-group-append {
@@ -77,8 +144,7 @@
             right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: #666;
-            pointer-events: none;
+            color: var(--text-light);
         }
 
         .select-wrapper {
@@ -96,23 +162,20 @@
             height: 0;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
-            border-top: 5px solid #666;
+            border-top: 5px solid var(--text-light);
             pointer-events: none;
         }
 
         select.input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.875rem;
             appearance: none;
-            background: white;
+            padding-right: 32px;
+            background-color: white;
+            cursor: pointer;
         }
 
         .radio-group {
             display: flex;
-            gap: 16px;
+            gap: 24px;
             margin-bottom: 16px;
         }
 
@@ -122,12 +185,19 @@
             gap: 8px;
             font-size: 0.875rem;
             cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .radio-label:hover {
+            background-color: var(--primary-light);
         }
 
         .radio-input {
-            margin: 0;
             width: 16px;
             height: 16px;
+            accent-color: var(--primary);
         }
 
         .grid {
@@ -138,19 +208,38 @@
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
-            background-color: #3b82f6;
+            padding: 14px;
+            background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 500;
+            font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.2s;
-            font-size: 1rem;
         }
 
         .submit-btn:hover {
-            background-color: #2563eb;
+            background-color: var(--primary-hover);
+        }
+
+        .reset-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            color: var(--secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--secondary);
+            background-color: var(--background);
         }
 
         .mt-2 { margin-top: 8px; }
@@ -161,7 +250,31 @@
     <div class="container">
         <div class="header">
             <h1 class="title">예상합의금 계산하기</h1>
-            <button type="button" class="btn" onclick="resetForm()">초기화</button>
+            <button type="button" class="reset-btn" onclick="resetForm()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                </svg>
+                초기화
+            </button>
+        </div>
+
+        <div class="notice-box">
+            <div class="notice-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="8"></line>
+                </svg>
+                안내사항
+            </div>
+            <p>보다 정확한 예상금액을 위하여 아래 사항에 가급적 상세히 입력해 주세요.</p>
+            <ul>
+                <li>사고유형 및 상세내용을 정확히 선택해주세요.</li>
+                <li>부상 부위는 최대 2개까지 선택 가능합니다.</li>
+                <li>과실비율은 0~100% 사이의 숫자로 입력해주세요.</li>
+                <li>입원/통원 일수와 치료비 정보를 구체적으로 입력해주세요.</li>
+            </ul>
         </div>
 
         <form id="calculatorForm" onsubmit="handleSubmit(event)">
