@@ -72,49 +72,59 @@ let formData = {
     selectedInjuryDetails: {}
 };
 
-// 초기화 함수
+// DOM이 로드되면 초기화
 document.addEventListener('DOMContentLoaded', function() {
     initializeAccidentTypes();
     initializeInjuryParts();
-    initializeFaultPercentSlider();
+    initializeFaultPercentInput();
 });
 
+// 사고유형 버튼 초기화
 function initializeAccidentTypes() {
     const container = document.getElementById('accidentTypes');
-    container.innerHTML = ''; // 기존 버튼들 제거
+    container.innerHTML = '';
 
     Object.keys(accidentDetails).forEach(type => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn';
         button.textContent = type;
-        button.addEventListener('click', () => selectAccidentType(type));
+        button.onclick = function(e) {
+            e.preventDefault();
+            selectAccidentType(type);
+        };
         container.appendChild(button);
     });
 }
 
+// 부상부위 버튼 초기화
 function initializeInjuryParts() {
     const container = document.getElementById('injuryParts');
-    container.innerHTML = ''; // 기존 버튼들 제거
+    container.innerHTML = '';
 
     Object.keys(injuryDetails).forEach(part => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn';
         button.textContent = part;
-        button.addEventListener('click', () => selectInjuryPart(part));
+        button.onclick = function(e) {
+            e.preventDefault();
+            selectInjuryPart(part);
+        };
         container.appendChild(button);
     });
 }
 
-function initializeFaultPercentSlider() {
-    const slider = document.getElementById('faultPercentInput');
-    const display = document.getElementById('faultPercentValue');
+// 과실비율 입력 초기화
+function initializeFaultPercentInput() {
+    const input = document.getElementById('faultPercentInput');
     
-    slider.addEventListener('input', function() {
-        const value = this.value;
-        display.textContent = value + '%';
-        formData.faultPercent = parseInt(value);
+    input.addEventListener('input', function(e) {
+        let value = parseInt(e.target.value) || 0;
+        if (value < 0) value = 0;
+        if (value > 100) value = 100;
+        e.target.value = value;
+        formData.faultPercent = value;
     });
 }
 
@@ -123,21 +133,26 @@ function selectAccidentType(type) {
     formData.accidentType = type;
     formData.accidentDetail = null;
 
-    // UI 업데이트
+    // 버튼 선택 상태 업데이트
     const buttons = document.querySelectorAll('#accidentTypes .btn');
     buttons.forEach(btn => {
+        btn.classList.remove('selected');
         if (btn.textContent === type) {
             btn.classList.add('selected');
-        } else {
-            btn.classList.remove('selected');
         }
     });
 
     // 상세 정보 표시
-    const detailsContainer = document.getElementById('accidentDetails');
-    detailsContainer.innerHTML = '';
+    showAccidentDetails(type);
+}
 
-    accidentDetails[type].forEach(detail => {
+// 사고유형 상세 정보 표시
+function showAccidentDetails(type) {
+    const container = document.getElementById('accidentDetails');
+    container.innerHTML = '';
+
+    const details = accidentDetails[type];
+    details.forEach(detail => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn detail-btn';
@@ -147,38 +162,38 @@ function selectAccidentType(type) {
                 `<div class="detail-fault">과실: ${detail.fault_percent}%</div>` : 
                 ''}
         `;
-        button.addEventListener('click', () => selectAccidentDetail(detail));
-        detailsContainer.appendChild(button);
+        button.onclick = function(e) {
+            e.preventDefault();
+            selectAccidentDetail(detail);
+        };
+        container.appendChild(button);
     });
 }
 
-// 사고 상세 선택 처리
+// 사고유형 상세 선택 처리
 function selectAccidentDetail(detail) {
     formData.accidentDetail = detail;
-    
-    // UI 업데이트
-    document.querySelectorAll('#accidentDetails .btn').forEach(btn => {
-        const descriptionEl = btn.querySelector('.detail-description');
-        if (descriptionEl && descriptionEl.textContent === detail.description) {
+
+    // 버튼 선택 상태 업데이트
+    const buttons = document.querySelectorAll('#accidentDetails .btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.querySelector('.detail-description').textContent === detail.description) {
             btn.classList.add('selected');
-        } else {
-            btn.classList.remove('selected');
         }
     });
 
     // 과실 비율 자동 설정
     if (detail.fault_percent !== null) {
-        const slider = document.getElementById('faultPercentInput');
-        const display = document.getElementById('faultPercentValue');
-        slider.value = detail.fault_percent;
-        display.textContent = detail.fault_percent + '%';
+        const input = document.getElementById('faultPercentInput');
+        input.value = detail.fault_percent;
         formData.faultPercent = detail.fault_percent;
     }
 
     updateSelectedAccidentInfo();
 }
 
-// 부상 부위 선택 처리
+// 부상부위 선택 처리
 function selectInjuryPart(part) {
     const index = formData.selectedInjuries.indexOf(part);
     
@@ -186,21 +201,24 @@ function selectInjuryPart(part) {
         if (formData.selectedInjuries.length < 2) {
             formData.selectedInjuries.push(part);
             formData.selectedInjuryDetails[part] = null;
+        } else {
+            return; // 이미 2개 선택됨
         }
     } else {
         formData.selectedInjuries.splice(index, 1);
         delete formData.selectedInjuryDetails[part];
     }
 
-    // UI 업데이트
-    document.querySelectorAll('#injuryParts .btn').forEach(btn => {
+    // 버튼 선택 상태 업데이트
+    const buttons = document.querySelectorAll('#injuryParts .btn');
+    buttons.forEach(btn => {
         btn.classList.toggle('selected', formData.selectedInjuries.includes(btn.textContent));
     });
 
     showInjuryDetails();
 }
 
-// 부상 상세 정보 표시
+// 부상부위 상세 정보 표시
 function showInjuryDetails() {
     const container = document.getElementById('injuryDetails');
     container.innerHTML = '';
@@ -210,8 +228,7 @@ function showInjuryDetails() {
         section.className = 'section';
         section.innerHTML = `<h3 class="section-title">${part}의 상세 부상을 선택해주세요.</h3>`;
 
-        const details = injuryDetails[part];
-        details.forEach(detail => {
+        injuryDetails[part].forEach(detail => {
             const button = document.createElement('button');
             button.type = 'button';
             button.className = `btn detail-btn ${formData.selectedInjuryDetails[part]?.id === detail.id ? 'selected' : ''}`;
@@ -219,7 +236,10 @@ function showInjuryDetails() {
                 <div class="detail-description">${detail.description}</div>
                 <div class="detail-fault">부상등급: ${detail.level}급</div>
             `;
-            button.addEventListener('click', () => selectInjuryDetail(part, detail));
+            button.onclick = function(e) {
+                e.preventDefault();
+                selectInjuryDetail(part, detail);
+            };
             section.appendChild(button);
         });
 
@@ -229,22 +249,21 @@ function showInjuryDetails() {
     updateSelectedInjuryInfo();
 }
 
-// 부상 상세 선택 처리
+// 부상부위 상세 선택 처리
 function selectInjuryDetail(part, detail) {
     formData.selectedInjuryDetails[part] = detail;
 
-    // UI 업데이트
-    document.querySelectorAll(`#injuryDetails .btn`).forEach(btn => {
-        const descriptionEl = btn.querySelector('.detail-description');
-        if (descriptionEl && descriptionEl.textContent === detail.description) {
-            btn.classList.add('selected');
-        }
+    // 버튼 선택 상태 업데이트
+    const buttons = document.querySelectorAll(`#injuryDetails .btn`);
+    buttons.forEach(btn => {
+        const isMatch = btn.querySelector('.detail-description').textContent === detail.description;
+        btn.classList.toggle('selected', isMatch);
     });
 
     updateSelectedInjuryInfo();
 }
 
-// 선택 정보 업데이트
+// 선택된 사고 정보 업데이트
 function updateSelectedAccidentInfo() {
     const container = document.getElementById('selectedAccidentInfo');
     if (formData.accidentDetail) {
@@ -253,14 +272,14 @@ function updateSelectedAccidentInfo() {
             <h4>선택된 사고 정보</h4>
             <p>${formData.accidentType} - ${formData.accidentDetail.description}</p>
             ${formData.accidentDetail.fault_percent !== null ? 
-                `<p>과실: ${formData.accidentDetail.fault_percent}%</p>` : 
-                ''}
+                `<p>과실: ${formData.accidentDetail.fault_percent}%</p>` : ''}
         `;
     } else {
         container.style.display = 'none';
     }
 }
 
+// 선택된 부상 정보 업데이트
 function updateSelectedInjuryInfo() {
     const container = document.getElementById('selectedInjuryInfo');
     const hasDetails = Object.values(formData.selectedInjuryDetails).some(detail => detail !== null);
@@ -291,13 +310,4 @@ function resetForm() {
         selectedInjuryDetails: {}
     };
 
-    // UI 초기화
-    document.querySelectorAll('.btn.selected').forEach(btn => btn.classList.remove('selected'));
-    document.getElementById('accidentDetails').innerHTML = '';
-    document.getElementById('injuryDetails').innerHTML = '';
-    document.getElementById('selectedAccidentInfo').style.display = 'none';
-    document.getElementById('selectedInjuryInfo').style.display = 'none';
-    document.getElementById('faultPercentInput').value = 0;
-    document.getElementById('faultPercentValue').textContent = '0%';
-    
-    // 폼 입력값 초기
+    // UI 초
