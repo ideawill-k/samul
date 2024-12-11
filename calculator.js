@@ -1,6 +1,6 @@
-// calculator.js
+// calculator.js - Part 1: 데이터 정의 및 초기화
 
-// 데이터 정의
+// 사고유형 상세 데이터
 const accidentDetails = {
     "차VS차": [
         { description: "뒤차가 내차 후미를 추돌하여 사고", code: "acdnt0101", fault_percent: 0 },
@@ -34,6 +34,7 @@ const accidentDetails = {
     ]
 };
 
+// 부상 부위별 상세 데이터
 const injuryDetails = {
     "머리": [
         { description: "3cm이상의 안면부 열상", level: 10, id: "HD01" },
@@ -55,14 +56,6 @@ const injuryDetails = {
         { description: "디스크(추간판탈출증)", level: 9, id: "SP08" },
         { description: "염좌", level: 12, id: "SP09" }
     ],
-    "몸통": [
-        { description: "쇄골골절", level: 7, id: "BD01" },
-        { description: "신장 파열로 수술한 상해", level: 2, id: "BD02" },
-        { description: "심장 파열로 수술을 시행한 상태", level: 1, id: "BD03" },
-        { description: "불안정성 골반골 골절로 수술을 시행한 상태", level: 1, id: "BD04" },
-        { description: "갈비뼈(늑골) 골절 (3개이상)", level: 8, id: "BD05" },
-        { description: "갈비뼈(늑골) 골절 (2개이하)", level: 9, id: "BD06" }
-    ],
     "어깨": [
         { description: "견관절 골절 및 탈구 (수술시행)", level: 3, id: "SD01" },
         { description: "견관절 골절 및 탈구 (수술미시행)", level: 6, id: "SD02" },
@@ -73,64 +66,13 @@ const injuryDetails = {
         { description: "염좌", level: 12, id: "SD07" },
         { description: "타박상", level: 14, id: "SD08" }
     ],
-    "팔꿈치": [
-        { description: "주관절 골절 및 탈구 (수술시행)", level: 3, id: "EB01" },
-        { description: "주관절 골절 및 탈구 (수술미시행)", level: 6, id: "EB02" },
-        { description: "주관절 인대파열 (수술시행)", level: 6, id: "EB03" },
-        { description: "주관절(팔꿈치) 탈구 (수술미시행)", level: 8, id: "EB04" },
-        { description: "주관절 인대파열 (수술미시행)", level: 9, id: "EB05" }
-    ],
-    "팔": [
-        { description: "상완골 간부 골절", level: 5, id: "AM03" },
-        { description: "상완골대결절견열 골절", level: 6, id: "AM04" },
-        { description: "상완골원위부견열골절(외상과 골절,내상과 골절 등에 해당)", level: 6, id: "AM05" },
-        { description: "상완골 경부 골절", level: 4, id: "AM06" },
-        { description: "염좌", level: 12, id: "AM01" },
-        { description: "타박상", level: 14, id: "AM02" }
-    ],
-    "손목/손": [
-        { description: "손목 관절내 골절", level: 5, id: "HN02" },
-        { description: "손목 삼각섬유연골복합체 손상", level: 7, id: "HN03" },
-        { description: "손목 골절 (수술미시행)", level: 5, id: "HN01" },
-        { description: "염좌", level: 12, id: "HN04" },
-        { description: "타박상", level: 14, id: "HN05" }
-    ],
-    "고관절": [
-        { description: "골반골절 (수술시행)", level: 4, id: "HP01" },
-        { description: "고관절 탈구 (수술시행)", level: 5, id: "HP02" },
-        { description: "대퇴골 골절", level: 5, id: "HP03" },
-        { description: "대퇴골두 골절 (수술미시행)", level: 5, id: "HP04" },
-        { description: "고관절 탈구 (수술미시행)", level: 6, id: "HP05" },
-        { description: "골반골절 (수술미시행)", level: 7, id: "HP06" },
-        { description: "비구 골절 또는 비구 골절 탈구로 수술을 시행하지 않은 상해", level: 4, id: "HP09" },
-        { description: "대퇴 골두 골절로 수술을 시행한 상해", level: 2, id: "HP10" },
-        { description: "비구 골절 또는 비구 골절 탈구로 수술을 시행한 상해", level: 1, id: "HP11" },
-        { description: "염좌", level: 12, id: "HP07" },
-        { description: "타박상", level: 14, id: "HP08" }
-    ],
     "무릎": [
         { description: "무릎 골절 및 탈구 (수술미시행)", level: 5, id: "KE01" },
         { description: "무릎 십자인대파열 (수술시행)", level: 5, id: "KE02" },
         { description: "무릎 측부인대파열 (수술시행)", level: 5, id: "KE03" },
-        { description: "무릎 십자인대파열 (수술미시행)", level: 6, id: "KE04" },
-        { description: "무릎 탈구 (수술미시행)", level: 6, id: "KE05" },
-        { description: "비골 골절", level: 7, id: "KE06" },
-        { description: "슬개골 골절", level: 7, id: "KE07" },
         { description: "무릎 측부인대파열", level: 8, id: "KE08" },
-        { description: "슬관절 탈구 (수술시행)", level: 4, id: "KE11" },
-        { description: "슬관절의 전방 및 후방 십자인대의 파열", level: 3, id: "KE12" },
-        { description: "슬관절의 골절 및 탈구로 수술을 시행한 상해", level: 2, id: "KE13" },
         { description: "염좌", level: 12, id: "KE09" },
         { description: "타박상", level: 14, id: "KE10" }
-    ],
-    "발목/발": [
-        { description: "족관절 골절 및 탈구로 수술시행", level: 3, id: "FT01" },
-        { description: "족관절 골절 (양과, 삼과 골절)", level: 5, id: "FT02" },
-        { description: "족관절 탈구 (수술시행)", level: 5, id: "FT03" },
-        { description: "족관절(발목) 탈구 (수술미시행)", level: 7, id: "FT04" },
-        { description: "족관절 골절 (내과, 외과, 후과 골절)", level: 7, id: "FT05" },
-        { description: "염좌", level: 12, id: "FT06" },
-        { description: "타박상", level: 14, id: "FT07" }
     ]
 };
 
@@ -151,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeForm();
 });
 
-// 폼 초기화
+// 폼 초기화 함수
 function initializeForm() {
     // 사고유형 선택 이벤트
     document.getElementById('accidentType').addEventListener('change', function(e) {
@@ -169,8 +111,17 @@ function initializeForm() {
     });
 
     // 부상 부위 선택 이벤트
-    ['injuryPart1', 'injuryPart2'].forEach((id, index) => {
-        document.getElementById(id).addEventListener('change', function(e) {
+    ['injuryPart1', 'injuryPart2'].forEach((selectId, index) => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">부위 선택</option>';
+        Object.keys(injuryDetails).forEach(part => {
+            const option = document.createElement('option');
+            option.value = part;
+            option.textContent = part;
+            select.appendChild(option);
+        });
+
+        select.addEventListener('change', function(e) {
             const part = e.target.value;
             if (index === 0) {
                 formData.selectedInjuries.part1 = part;
@@ -180,20 +131,8 @@ function initializeForm() {
             updateInjuryDetails(part, index + 1);
         });
     });
-
-    // 부상 부위 선택 옵션 초기화
-    const injurySelects = ['injuryPart1', 'injuryPart2'];
-    injurySelects.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        select.innerHTML = '<option value="">부위 선택</option>';
-        Object.keys(injuryDetails).forEach(part => {
-            const option = document.createElement('option');
-            option.value = part;
-            option.textContent = part;
-            select.appendChild(option);
-        });
-    });
 }
+// calculator.js - Part 2: UI 업데이트 및 이벤트 처리
 
 // 사고유형 상세 정보 업데이트
 function updateAccidentDetails(type) {
@@ -247,6 +186,7 @@ function updateInjuryDetails(part, index) {
     const select = document.createElement('select');
     select.className = 'input';
     select.id = `injuryDetail${index}`;
+    select.required = true;
     select.innerHTML = '<option value="">상세 부상을 선택해주세요</option>';
 
     injuryDetails[part].forEach(detail => {
@@ -271,6 +211,48 @@ function updateInjuryDetails(part, index) {
     });
 }
 
+// 결과 표시 함수
+function showResult(result) {
+    // 금액 포맷팅 함수
+    const formatAmount = (amount) => {
+        return amount.toLocaleString() + '원';
+    };
+
+    // 결과 업데이트
+    document.getElementById('totalAmount').textContent = formatAmount(result.calculator_total);
+    document.getElementById('result01').textContent = formatAmount(result.calculator_sub01);
+    document.getElementById('result02').textContent = formatAmount(result.calculator_sub02);
+    document.getElementById('result03').textContent = formatAmount(result.calculator_sub03);
+    document.getElementById('result05').textContent = formatAmount(result.calculator_sub05);
+    document.getElementById('result06').textContent = formatAmount(result.calculator_sub06);
+    document.getElementById('result07').textContent = formatAmount(result.calculator_sub07);
+    document.getElementById('result09').textContent = formatAmount(result.calculator_sub09);
+    document.getElementById('result10').textContent = formatAmount(result.calculator_sub10);
+
+    // 모달 표시
+    document.getElementById('resultModal').style.display = 'block';
+}
+
+// 모달 관련 함수들
+function closeModal() {
+    document.getElementById('resultModal').style.display = 'none';
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// 모달 외부 클릭시 닫기
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('resultModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
 // 폼 초기화
 function resetForm() {
     formData = {
@@ -292,8 +274,13 @@ function resetForm() {
 }
 
 // 폼 제출 처리
-function handleSubmit(event) {
+async function handleSubmit(event) {
     event.preventDefault();
+
+    // 입력값 검증
+    if (!validateForm()) {
+        return;
+    }
     
     // 폼 데이터 수집
     const submitData = {
@@ -313,6 +300,77 @@ function handleSubmit(event) {
         injuries: Object.values(formData.selectedInjuryDetails)
     };
 
-    console.log('제출 데이터:', submitData);
-    // 여기에 API 호출 로직 추가
+    try {
+        const response = await fetch('https://samulxcar-ing.com/caring/calculator', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submitData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            showResult(result);
+        } else {
+            alert('계산 중 오류가 발생했습니다.');
+        }
+    } catch (error) {
+        console.error('API 호출 오류:', error);
+        alert('서버 통신 중 오류가 발생했습니다.');
+    }
+}
+
+// 폼 검증 함수
+function validateForm() {
+    const requiredFields = {
+        accidentType: "사고유형을 선택해주세요.",
+        accidentDetail: "사고 상세유형을 선택해주세요.",
+        ageInput: "현재 나이를 입력해주세요.",
+        incomeInput: "월 소득을 입력해주세요.",
+        hospitalizationDays: "입원 일수를 입력해주세요.",
+        outpatientDays: "통원 일수를 입력해주세요.",
+        hospitalCost: "병원비를 입력해주세요.",
+        directPaymentCost: "직불치료비를 입력해주세요."
+    };
+
+    // 라디오 버튼 검증
+    const radioGroups = {
+        occupation: "직업을 선택해주세요.",
+        surgery: "수술 여부를 선택해주세요.",
+        insuranceType: "보험 유형을 선택해주세요."
+    };
+
+    let isValid = true;
+    const errors = [];
+
+    // 기본 필드 검증
+    Object.entries(requiredFields).forEach(([fieldId, message]) => {
+        const field = document.getElementById(fieldId);
+        if (!field.value) {
+            errors.push(message);
+            isValid = false;
+        }
+    });
+
+    // 라디오 버튼 검증
+    Object.entries(radioGroups).forEach(([name, message]) => {
+        if (!document.querySelector(`input[name="${name}"]:checked`)) {
+            errors.push(message);
+            isValid = false;
+        }
+    });
+
+    // 부상 부위 검증
+    if (!formData.selectedInjuries.part1) {
+        errors.push("최소 한 개 이상의 부상 부위를 선택해주세요.");
+        isValid = false;
+    }
+
+    if (!isValid) {
+        alert('다음 항목을 확인해주세요:\n\n' + errors.join('\n'));
+    }
+
+    return isValid;
 }

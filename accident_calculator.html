@@ -4,247 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>교통사고 합의금 계산기</title>
-    <style>
-        :root {
-            --primary: #4F46E5;
-            --primary-hover: #4338CA;
-            --primary-light: #EEF2FF;
-            --secondary: #6B7280;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --background: #F9FAFB;
-            --text: #1F2937;
-            --text-light: #6B7280;
-            --border: #E5E7EB;
-            --border-focus: #A5B4FC;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            line-height: 1.5;
-            padding: 20px;
-            background-color: var(--background);
-            color: var(--text);
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .notice-box {
-            background-color: var(--primary-light);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 24px;
-        }
-
-        .notice-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .notice-box ul {
-            list-style: none;
-            padding-left: 24px;
-        }
-
-        .notice-box li {
-            position: relative;
-            font-size: 0.875rem;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .notice-box li:before {
-            content: "•";
-            position: absolute;
-            left: -16px;
-            color: var(--primary);
-        }
-
-        .section {
-            background: white;
-            padding: 20px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: box-shadow 0.2s;
-        }
-
-        .section:hover {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .section-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text);
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .input-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-        }
-
-        .input:focus {
-            outline: none;
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.2);
-        }
-
-        .input-group-append {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-
-        .select-wrapper {
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .select-wrapper:after {
-            content: '';
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid var(--text-light);
-            pointer-events: none;
-        }
-
-        select.input {
-            appearance: none;
-            padding-right: 32px;
-            background-color: white;
-            cursor: pointer;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 16px;
-        }
-
-        .radio-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-        }
-
-        .radio-label:hover {
-            background-color: var(--primary-light);
-        }
-
-        .radio-input {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary);
-        }
-
-        .grid {
-            display: grid;
-            gap: 16px;
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .submit-btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .reset-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: white;
-            color: var(--secondary);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .reset-btn:hover {
-            border-color: var(--secondary);
-            background-color: var(--background);
-        }
-
-        .mt-2 { margin-top: 8px; }
-        .mt-4 { margin-top: 16px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -269,20 +29,14 @@
                 안내사항
             </div>
             <p>보다 정확한 예상금액을 위하여 아래 사항에 가급적 상세히 입력해 주세요.</p>
-            <ul>
-                <li>사고유형 및 상세내용을 정확히 선택해주세요.</li>
-                <li>부상 부위는 최대 2개까지 선택 가능합니다.</li>
-                <li>과실비율은 0~100% 사이의 숫자로 입력해주세요.</li>
-                <li>입원/통원 일수와 치료비 정보를 구체적으로 입력해주세요.</li>
-            </ul>
         </div>
 
         <form id="calculatorForm" onsubmit="handleSubmit(event)">
             <!-- 사고유형 선택 -->
             <div class="section">
-                <h2 class="section-title">사고유형을 선택해주세요.</h2>
+                <h2 class="section-title">사고유형을 선택해주세요. <span class="required">*</span></h2>
                 <div class="select-wrapper">
-                    <select id="accidentType" class="input">
+                    <select id="accidentType" class="input" required>
                         <option value="">선택해주세요</option>
                         <option value="차VS차">차VS차</option>
                         <option value="차VS사람">차VS사람</option>
@@ -291,7 +45,7 @@
                     </select>
                 </div>
                 <div id="accidentDetails" class="mt-4" style="display: none;">
-                    <select id="accidentDetail" class="input">
+                    <select id="accidentDetail" class="input" required>
                         <option value="">상세 유형을 선택해주세요</option>
                     </select>
                 </div>
@@ -299,7 +53,7 @@
 
             <!-- 과실 비율 -->
             <div class="section">
-                <h2 class="section-title">본인 과실 비율을 입력해주세요. (0~100%)</h2>
+                <h2 class="section-title">본인 과실 비율을 입력해주세요. (0~100%) <span class="required">*</span></h2>
                 <div class="input-group">
                     <input type="number" 
                            class="input" 
@@ -307,6 +61,7 @@
                            min="0" 
                            max="100" 
                            value="0"
+                           required
                            placeholder="과실 비율 입력">
                     <span class="input-group-append">%</span>
                 </div>
@@ -314,25 +69,15 @@
 
             <!-- 부상 부위 선택 -->
             <div class="section">
-                <h2 class="section-title">부상 부위를 선택해주세요. (최대 2개)</h2>
+                <h2 class="section-title">부상 부위를 선택해주세요. (최대 2개) <span class="required">*</span></h2>
                 <div class="select-wrapper">
-                    <select id="injuryPart1" class="input">
+                    <select id="injuryPart1" class="input" required>
                         <option value="">첫 번째 부위 선택</option>
-                        <option value="머리">머리</option>
-                        <option value="척추">척추</option>
-                        <option value="어깨">어깨</option>
-                        <option value="무릎">무릎</option>
-                        <option value="발목/발">발목/발</option>
                     </select>
                 </div>
                 <div class="select-wrapper mt-2">
                     <select id="injuryPart2" class="input">
                         <option value="">두 번째 부위 선택 (선택사항)</option>
-                        <option value="머리">머리</option>
-                        <option value="척추">척추</option>
-                        <option value="어깨">어깨</option>
-                        <option value="무릎">무릎</option>
-                        <option value="발목/발">발목/발</option>
                     </select>
                 </div>
                 <div id="injuryDetails" class="mt-4"></div>
@@ -342,20 +87,20 @@
             <div class="section">
                 <div class="grid">
                     <div class="input-group">
-                        <label class="input-label">현재 나이 (만)</label>
-                        <input type="number" class="input" id="ageInput" min="0">
+                        <label class="input-label">현재 나이 (만) <span class="required">*</span></label>
+                        <input type="number" class="input" id="ageInput" min="0" required>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">월 소득 (만원)</label>
-                        <input type="number" class="input" id="incomeInput" min="0">
+                        <label class="input-label">월 소득 (만원) <span class="required">*</span></label>
+                        <input type="number" class="input" id="incomeInput" min="0" required>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label">직업</label>
+                    <label class="input-label">직업 <span class="required">*</span></label>
                     <div class="radio-group">
                         <label class="radio-label">
-                            <input type="radio" name="occupation" value="근로자/프리랜서" class="radio-input">
+                            <input type="radio" name="occupation" value="근로자/프리랜서" class="radio-input" required>
                             근로자/프리랜서
                         </label>
                         <label class="radio-label">
@@ -366,10 +111,10 @@
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label">수술 여부</label>
+                    <label class="input-label">수술 여부 <span class="required">*</span></label>
                     <div class="radio-group">
                         <label class="radio-label">
-                            <input type="radio" name="surgery" value="true" class="radio-input">
+                            <input type="radio" name="surgery" value="true" class="radio-input" required>
                             예
                         </label>
                         <label class="radio-label">
@@ -381,20 +126,20 @@
 
                 <div class="grid">
                     <div class="input-group">
-                        <label class="input-label">입원 일수</label>
-                        <input type="number" class="input" id="hospitalizationDays" min="0">
+                        <label class="input-label">입원 일수 <span class="required">*</span></label>
+                        <input type="number" class="input" id="hospitalizationDays" min="0" required>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">통원 일수</label>
-                        <input type="number" class="input" id="outpatientDays" min="0">
+                        <label class="input-label">통원 일수 <span class="required">*</span></label>
+                        <input type="number" class="input" id="outpatientDays" min="0" required>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label">보험 유형</label>
+                    <label class="input-label">보험 유형 <span class="required">*</span></label>
                     <div class="radio-group">
                         <label class="radio-label">
-                            <input type="radio" name="insuranceType" value="일반보험" class="radio-input">
+                            <input type="radio" name="insuranceType" value="일반보험" class="radio-input" required>
                             일반보험
                         </label>
                         <label class="radio-label">
@@ -406,18 +151,69 @@
 
                 <div class="grid">
                     <div class="input-group">
-                        <label class="input-label">병원비 (만원)</label>
-                        <input type="number" class="input" id="hospitalCost" min="0">
+                        <label class="input-label">병원비 (만원) <span class="required">*</span></label>
+                        <input type="number" class="input" id="hospitalCost" min="0" required>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">직불치료비 (만원)</label>
-                        <input type="number" class="input" id="directPaymentCost" min="0">
+                        <label class="input-label">직불치료비 (만원) <span class="required">*</span></label>
+                        <input type="number" class="input" id="directPaymentCost" min="0" required>
                     </div>
                 </div>
             </div>
 
             <button type="submit" class="submit-btn">예상합의금 계산하기</button>
         </form>
+    </div>
+
+    <!-- 결과 모달 -->
+    <div id="resultModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>예상 합의금 계산 결과</h2>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="result-total">
+                    <h3>예상 합의금 총액</h3>
+                    <p id="totalAmount">0원</p>
+                </div>
+                <div class="result-details">
+                    <h3>상세 내역</h3>
+                    <div class="result-item">
+                        <span>위자료</span>
+                        <span id="result01">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>휴업 손해액</span>
+                        <span id="result02">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>교통비</span>
+                        <span id="result03">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>직불 치료비</span>
+                        <span id="result05">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>향후 치료비</span>
+                        <span id="result06">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>간병비</span>
+                        <span id="result07">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>치료비 상계</span>
+                        <span id="result09">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span>상실 수익</span>
+                        <span id="result10">0원</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="calculator.js"></script>
