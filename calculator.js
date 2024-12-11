@@ -73,32 +73,36 @@ let formData = {
 };
 
 // 초기화 함수
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', function() {
     initializeAccidentTypes();
     initializeInjuryParts();
     initializeFaultPercentSlider();
-};
+});
 
 function initializeAccidentTypes() {
     const container = document.getElementById('accidentTypes');
+    container.innerHTML = ''; // 기존 버튼들 제거
+
     Object.keys(accidentDetails).forEach(type => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn';
         button.textContent = type;
-        button.onclick = () => selectAccidentType(type);
+        button.addEventListener('click', () => selectAccidentType(type));
         container.appendChild(button);
     });
 }
 
 function initializeInjuryParts() {
     const container = document.getElementById('injuryParts');
+    container.innerHTML = ''; // 기존 버튼들 제거
+
     Object.keys(injuryDetails).forEach(part => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn';
         button.textContent = part;
-        button.onclick = () => selectInjuryPart(part);
+        button.addEventListener('click', () => selectInjuryPart(part));
         container.appendChild(button);
     });
 }
@@ -120,8 +124,13 @@ function selectAccidentType(type) {
     formData.accidentDetail = null;
 
     // UI 업데이트
-    document.querySelectorAll('#accidentTypes .btn').forEach(btn => {
-        btn.classList.toggle('selected', btn.textContent === type);
+    const buttons = document.querySelectorAll('#accidentTypes .btn');
+    buttons.forEach(btn => {
+        if (btn.textContent === type) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
     });
 
     // 상세 정보 표시
@@ -138,7 +147,7 @@ function selectAccidentType(type) {
                 `<div class="detail-fault">과실: ${detail.fault_percent}%</div>` : 
                 ''}
         `;
-        button.onclick = () => selectAccidentDetail(detail);
+        button.addEventListener('click', () => selectAccidentDetail(detail));
         detailsContainer.appendChild(button);
     });
 }
@@ -149,8 +158,12 @@ function selectAccidentDetail(detail) {
     
     // UI 업데이트
     document.querySelectorAll('#accidentDetails .btn').forEach(btn => {
-        btn.classList.toggle('selected', 
-            btn.querySelector('.detail-description').textContent === detail.description);
+        const descriptionEl = btn.querySelector('.detail-description');
+        if (descriptionEl && descriptionEl.textContent === detail.description) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
     });
 
     // 과실 비율 자동 설정
@@ -162,7 +175,6 @@ function selectAccidentDetail(detail) {
         formData.faultPercent = detail.fault_percent;
     }
 
-    // 선택 정보 표시
     updateSelectedAccidentInfo();
 }
 
@@ -185,7 +197,6 @@ function selectInjuryPart(part) {
         btn.classList.toggle('selected', formData.selectedInjuries.includes(btn.textContent));
     });
 
-    // 상세 정보 표시
     showInjuryDetails();
 }
 
@@ -203,20 +214,19 @@ function showInjuryDetails() {
         details.forEach(detail => {
             const button = document.createElement('button');
             button.type = 'button';
-            button.className = 'btn detail-btn';
-            if (formData.selectedInjuryDetails[part]?.id === detail.id) {
-                button.classList.add('selected');
-            }
+            button.className = `btn detail-btn ${formData.selectedInjuryDetails[part]?.id === detail.id ? 'selected' : ''}`;
             button.innerHTML = `
                 <div class="detail-description">${detail.description}</div>
                 <div class="detail-fault">부상등급: ${detail.level}급</div>
             `;
-            button.onclick = () => selectInjuryDetail(part, detail);
+            button.addEventListener('click', () => selectInjuryDetail(part, detail));
             section.appendChild(button);
         });
 
         container.appendChild(section);
     });
+
+    updateSelectedInjuryInfo();
 }
 
 // 부상 상세 선택 처리
@@ -224,9 +234,9 @@ function selectInjuryDetail(part, detail) {
     formData.selectedInjuryDetails[part] = detail;
 
     // UI 업데이트
-    const buttons = document.querySelectorAll(`#injuryDetails .btn`);
-    buttons.forEach(btn => {
-        if (btn.querySelector('.detail-description').textContent === detail.description) {
+    document.querySelectorAll(`#injuryDetails .btn`).forEach(btn => {
+        const descriptionEl = btn.querySelector('.detail-description');
+        if (descriptionEl && descriptionEl.textContent === detail.description) {
             btn.classList.add('selected');
         }
     });
@@ -290,14 +300,4 @@ function resetForm() {
     document.getElementById('faultPercentInput').value = 0;
     document.getElementById('faultPercentValue').textContent = '0%';
     
-    // 폼 입력값 초기화
-    document.getElementById('calculatorForm').reset();
-}
-
-// 폼 제출 처리
-function handleSubmit(event) {
-    event.preventDefault();
-    
-    // 폼 데이터 수집
-    const formElements = event.target.elements;
-    const submitData = {
+    // 폼 입력값 초기
