@@ -1,4 +1,4 @@
-// calculator.js - Part 1: 데이터 정의 및 초기화
+// calculator.js - Part 1: 데이터 정의
 
 // 사고유형 상세 데이터
 const accidentDetails = {
@@ -74,6 +74,50 @@ const injuryDetails = {
         { description: "염좌", level: 12, id: "SD07" },
         { description: "타박상", level: 14, id: "SD08" }
     ],
+    "팔꿈치": [
+        { description: "주관절 골절 및 탈구 (수술시행)", level: 3, id: "EB01" },
+        { description: "주관절 골절 및 탈구 (수술미시행)", level: 6, id: "EB02" },
+        { description: "주관절 인대파열 (수술시행)", level: 6, id: "EB03" },
+        { description: "주관절(팔꿈치) 탈구 (수술미시행)", level: 8, id: "EB04" },
+        { description: "주관절 인대파열 (수술미시행)", level: 9, id: "EB05" }
+    ],
+    "팔": [
+        { description: "상완골 간부 골절", level: 5, id: "AM03" },
+        { description: "상완골대결절견열 골절", level: 6, id: "AM04" },
+        { description: "상완골원위부견열골절(외상과 골절,내상과 골절 등에 해당)", level: 6, id: "AM05" },
+        { description: "상완골 경부 골절", level: 4, id: "AM06" },
+        { description: "염좌", level: 12, id: "AM01" },
+        { description: "타박상", level: 14, id: "AM02" }
+    ],
+    "손목/손": [
+        { description: "손목 골절 (수술미시행)", level: 5, id: "HN01" },
+        { description: "손목 관절내 골절", level: 5, id: "HN02" },
+        { description: "손목 삼각섬유연골복합체 손상", level: 7, id: "HN03" },
+        { description: "염좌", level: 12, id: "HN04" },
+        { description: "타박상", level: 14, id: "HN05" }
+    ],
+    "손가락": [
+        { description: "손가락 관절부위 골절 (수술시행) - 나머지 손가락", level: 9, id: "FG01" },
+        { description: "손가락 관절부위 골절 (수술시행) - 엄지 손가락", level: 9, id: "FG02" },
+        { description: "손가락 관절부위 골절 (수술미시행)", level: 10, id: "FG03" },
+        { description: "손가락 골절 (수술미시행)", level: 11, id: "FG04" },
+        { description: "엄지절단 후 재접합술", level: 4, id: "FG05" },
+        { description: "다발성 수지 절단 후 재접합술", level: 4, id: "FG06" },
+        { description: "수근부 완전 절단 소실로 재접합술을 시행한 상해", level: 4, id: "FG07" }
+    ],
+    "고관절": [
+        { description: "골반골절 (수술시행)", level: 4, id: "HP01" },
+        { description: "고관절 탈구 (수술시행)", level: 5, id: "HP02" },
+        { description: "대퇴골 골절", level: 5, id: "HP03" },
+        { description: "대퇴골두 골절 (수술미시행)", level: 5, id: "HP04" },
+        { description: "고관절 탈구 (수술미시행)", level: 6, id: "HP05" },
+        { description: "골반골절 (수술미시행)", level: 7, id: "HP06" },
+        { description: "비구 골절 또는 비구 골절 탈구로 수술을 시행하지 않은 상해", level: 4, id: "HP09" },
+        { description: "대퇴 골두 골절로 수술을 시행한 상해", level: 2, id: "HP10" },
+        { description: "비구 골절 또는 비구 골절 탈구로 수술을 시행한 상해", level: 1, id: "HP11" },
+        { description: "염좌", level: 12, id: "HP07" },
+        { description: "타박상", level: 14, id: "HP08" }
+    ],
     "무릎": [
         { description: "무릎 골절 및 탈구 (수술미시행)", level: 5, id: "KE01" },
         { description: "무릎 십자인대파열 (수술시행)", level: 5, id: "KE02" },
@@ -88,6 +132,25 @@ const injuryDetails = {
         { description: "슬관절의 골절 및 탈구로 수술을 시행한 상해", level: 2, id: "KE13" },
         { description: "염좌", level: 12, id: "KE09" },
         { description: "타박상", level: 14, id: "KE10" }
+    ],
+    "발목/발": [
+        { description: "족관절 골절 및 탈구로 수술시행", level: 3, id: "FT01" },
+        { description: "족관절 골절 (양과, 삼과 골절)", level: 5, id: "FT02" },
+        { description: "족관절 탈구 (수술시행)", level: 5, id: "FT03" },
+        { description: "족관절(발목) 탈구 (수술미시행)", level: 7, id: "FT04" },
+        { description: "족관절 골절 (내과, 외과, 후과 골절)", level: 7, id: "FT05" },
+        { description: "염좌", level: 12, id: "FT06" },
+        { description: "타박상", level: 14, id: "FT07" }
+    ],
+    "발가락": [
+        { description: "발가락 관절부위 골절 (수술시행) - 나머지 발가락", level: 9, id: "TS01" },
+        { description: "발가락 관절부위 골절 (수술시행) - 엄지 발가락", level: 9, id: "TS02" },
+        { description: "발가락 관절부위 골절 (수술미시행)", level: 10, id: "TS03" },
+        { description: "발가락 골절 (수술미시행)", level: 11, id: "TS04" },
+        { description: "거골 또는 종골 골절", level: 4, id: "TS05" },
+        { description: "엄지발가락 절단 후 재접합술", level: 4, id: "TS06" },
+        { description: "다발성 족지 절단 후 재접합술", level: 4, id: "TS07" },
+        { description: "족근부 완전 절단 소실로 재접합술을 시행한 상해", level: 3, id: "TS08" }
     ]
 };
 
@@ -102,7 +165,6 @@ let formData = {
     },
     selectedInjuryDetails: {}
 };
-
 // DOM이 로드되면 초기화
 document.addEventListener('DOMContentLoaded', function() {
     initializeForm();
@@ -123,6 +185,8 @@ function initializeForm() {
         value = Math.max(0, Math.min(100, value));
         e.target.value = value;
         formData.faultPercent = value;
+        document.getElementById('faultGuide').textContent = '과실 비율이 수정되었습니다.';
+        document.getElementById('faultGuide').className = 'guide-text manual-input';
     });
 
     // 부상 부위 선택 이벤트
@@ -199,6 +263,7 @@ function updateInjuryDetails(part, index) {
     const containerId = `injuryDetailContainer${index}`;
     let container = document.getElementById(containerId);
     
+    // 부상 부위 섹션 생성 또는 업데이트
     if (!container) {
         container = document.createElement('div');
         container.id = containerId;
@@ -235,29 +300,7 @@ function updateInjuryDetails(part, index) {
         }
     });
 }
-
-// 폼 초기화
-function resetForm() {
-    formData = {
-        accidentType: '',
-        accidentDetail: null,
-        faultPercent: 0,
-        selectedInjuries: {
-            part1: null,
-            part2: null
-        },
-        selectedInjuryDetails: {}
-    };
-
-    // 폼 요소 초기화
-    document.getElementById('calculatorForm').reset();
-    document.getElementById('accidentDetails').style.display = 'none';
-    document.getElementById('injuryDetails').innerHTML = '';
-    document.getElementById('faultPercentInput').value = '0';
-    document.getElementById('faultGuide').textContent = '';
-}
-
-// 모달 관리
+// 모달 관련 함수
 function showResult(result) {
     // 금액 포맷팅 함수
     const formatAmount = (amount) => {
@@ -297,6 +340,28 @@ document.addEventListener('keydown', function(event) {
         closeModal();
     }
 });
+
+// 폼 초기화
+function resetForm() {
+    formData = {
+        accidentType: '',
+        accidentDetail: null,
+        faultPercent: 0,
+        selectedInjuries: {
+            part1: null,
+            part2: null
+        },
+        selectedInjuryDetails: {}
+    };
+
+    // 폼 요소 초기화
+    document.getElementById('calculatorForm').reset();
+    document.getElementById('accidentDetails').style.display = 'none';
+    document.getElementById('injuryDetails').innerHTML = '';
+    document.getElementById('faultPercentInput').value = '0';
+    document.getElementById('faultGuide').textContent = '';
+}
+
 // 폼 검증
 function validateForm() {
     const requiredFields = {
@@ -340,6 +405,17 @@ function validateForm() {
     if (!formData.selectedInjuries.part1) {
         errors.push("최소 한 개 이상의 부상 부위를 선택해주세요.");
         isValid = false;
+    }
+
+    if (isValid) {
+        // 부상 상세 선택 검증
+        const selectedParts = Object.values(formData.selectedInjuries).filter(part => part !== null);
+        for (let i = 0; i < selectedParts.length; i++) {
+            if (!formData.selectedInjuryDetails[`injury${i+1}`]) {
+                errors.push(`${selectedParts[i]}의 상세 부상을 선택해주세요.`);
+                isValid = false;
+            }
+        }
     }
 
     if (!isValid) {
