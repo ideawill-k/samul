@@ -191,6 +191,38 @@ select.input {
     grid-template-columns: repeat(2, 1fr);
 }
 
+/* 부상부위 상세 선택 영역 */
+.injury-details-container {
+    margin-top: 20px;
+}
+
+.injury-detail-section {
+    background-color: #f8fafc;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+}
+
+.injury-detail-section + .injury-detail-section {
+    margin-top: 16px;
+}
+
+/* 과실비율 안내 텍스트 */
+.guide-text {
+    font-size: 0.875rem;
+    margin-top: 8px;
+    color: var(--text-light);
+}
+
+.guide-text.auto-input {
+    color: var(--success);
+}
+
+.guide-text.manual-input {
+    color: var(--primary);
+}
+
 /* 모달 스타일 */
 .modal {
     display: none;
@@ -316,16 +348,6 @@ select.input {
 .reset-btn:hover {
     border-color: var(--secondary);
     background-color: var(--background);
-}
-
-.input-error {
-    border-color: var(--danger) !important;
-}
-
-.error-message {
-    color: var(--danger);
-    font-size: 0.875rem;
-    margin-top: 4px;
 }
 
 .mt-2 { margin-top: 8px; }

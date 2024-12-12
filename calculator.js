@@ -56,6 +56,14 @@ const injuryDetails = {
         { description: "디스크(추간판탈출증)", level: 9, id: "SP08" },
         { description: "염좌", level: 12, id: "SP09" }
     ],
+    "몸통": [
+        { description: "쇄골골절", level: 7, id: "BD01" },
+        { description: "신장 파열로 수술한 상해", level: 2, id: "BD02" },
+        { description: "심장 파열로 수술을 시행한 상태", level: 1, id: "BD03" },
+        { description: "불안정성 골반골 골절로 수술을 시행한 상태", level: 1, id: "BD04" },
+        { description: "갈비뼈(늑골) 골절 (3개이상)", level: 8, id: "BD05" },
+        { description: "갈비뼈(늑골) 골절 (2개이하)", level: 9, id: "BD06" }
+    ],
     "어깨": [
         { description: "견관절 골절 및 탈구 (수술시행)", level: 3, id: "SD01" },
         { description: "견관절 골절 및 탈구 (수술미시행)", level: 6, id: "SD02" },
@@ -70,7 +78,14 @@ const injuryDetails = {
         { description: "무릎 골절 및 탈구 (수술미시행)", level: 5, id: "KE01" },
         { description: "무릎 십자인대파열 (수술시행)", level: 5, id: "KE02" },
         { description: "무릎 측부인대파열 (수술시행)", level: 5, id: "KE03" },
+        { description: "무릎 십자인대파열 (수술미시행)", level: 6, id: "KE04" },
+        { description: "무릎 탈구 (수술미시행)", level: 6, id: "KE05" },
+        { description: "비골 골절", level: 7, id: "KE06" },
+        { description: "슬개골 골절", level: 7, id: "KE07" },
         { description: "무릎 측부인대파열", level: 8, id: "KE08" },
+        { description: "슬관절 탈구 (수술시행)", level: 4, id: "KE11" },
+        { description: "슬관절의 전방 및 후방 십자인대의 파열", level: 3, id: "KE12" },
+        { description: "슬관절의 골절 및 탈구로 수술을 시행한 상해", level: 2, id: "KE13" },
         { description: "염좌", level: 12, id: "KE09" },
         { description: "타박상", level: 14, id: "KE10" }
     ]
@@ -132,15 +147,16 @@ function initializeForm() {
         });
     });
 }
-// calculator.js - Part 2: UI 업데이트 및 이벤트 처리
 
 // 사고유형 상세 정보 업데이트
 function updateAccidentDetails(type) {
     const detailsContainer = document.getElementById('accidentDetails');
     const detailSelect = document.getElementById('accidentDetail');
+    const faultGuide = document.getElementById('faultGuide');
 
     if (!type) {
         detailsContainer.style.display = 'none';
+        faultGuide.textContent = '';
         return;
     }
 
@@ -153,6 +169,9 @@ function updateAccidentDetails(type) {
     });
 
     detailsContainer.style.display = 'block';
+    document.getElementById('faultPercentInput').value = '0';
+    faultGuide.textContent = '상세 유형을 선택하면 과실비율이 자동으로 입력됩니다.';
+    faultGuide.className = 'guide-text';
 
     // 상세 유형 선택 이벤트
     detailSelect.onchange = function(e) {
@@ -163,6 +182,13 @@ function updateAccidentDetails(type) {
             if (detail.fault_percent !== null) {
                 document.getElementById('faultPercentInput').value = detail.fault_percent;
                 formData.faultPercent = detail.fault_percent;
+                faultGuide.textContent = '* 과실비율이 자동으로 입력되었습니다.';
+                faultGuide.className = 'guide-text auto-input';
+            } else {
+                document.getElementById('faultPercentInput').value = '0';
+                formData.faultPercent = 0;
+                faultGuide.textContent = '* 과실비율을 직접 입력해주세요. (0~100%)';
+                faultGuide.className = 'guide-text manual-input';
             }
         }
     };
@@ -171,36 +197,35 @@ function updateAccidentDetails(type) {
 // 부상 부위 상세 정보 업데이트
 function updateInjuryDetails(part, index) {
     const containerId = `injuryDetailContainer${index}`;
-    const existingContainer = document.getElementById(containerId);
+    let container = document.getElementById(containerId);
     
-    if (existingContainer) {
-        existingContainer.remove();
+    if (!container) {
+        container = document.createElement('div');
+        container.id = containerId;
+        container.className = 'injury-detail-section';
+        document.getElementById('injuryDetails').appendChild(container);
     }
 
-    if (!part) return;
+    if (!part) {
+        container.style.display = 'none';
+        return;
+    }
 
-    const containerDiv = document.createElement('div');
-    containerDiv.id = containerId;
-    containerDiv.className = 'select-wrapper mt-2';
-
-    const select = document.createElement('select');
-    select.className = 'input';
-    select.id = `injuryDetail${index}`;
-    select.required = true;
-    select.innerHTML = '<option value="">상세 부상을 선택해주세요</option>';
-
-    injuryDetails[part].forEach(detail => {
-        const option = document.createElement('option');
-        option.value = detail.id;
-        option.textContent = `${detail.description} (${detail.level}급)`;
-        select.appendChild(option);
-    });
-
-    containerDiv.appendChild(select);
-    document.getElementById('injuryDetails').appendChild(containerDiv);
+    container.style.display = 'block';
+    container.innerHTML = `
+        <h3 class="section-title">${index}번째 선택: ${part}의 상세 부상</h3>
+        <div class="select-wrapper">
+            <select id="injuryDetail${index}" class="input" required>
+                <option value="">상세 부상을 선택해주세요</option>
+                ${injuryDetails[part].map(detail => 
+                    `<option value="${detail.id}">${detail.description} (${detail.level}급)</option>`
+                ).join('')}
+            </select>
+        </div>
+    `;
 
     // 상세 부상 선택 이벤트
-    select.addEventListener('change', function(e) {
+    document.getElementById(`injuryDetail${index}`).addEventListener('change', function(e) {
         const detailId = e.target.value;
         if (detailId) {
             const detail = injuryDetails[part].find(d => d.id === detailId);
@@ -211,7 +236,28 @@ function updateInjuryDetails(part, index) {
     });
 }
 
-// 결과 표시 함수
+// 폼 초기화
+function resetForm() {
+    formData = {
+        accidentType: '',
+        accidentDetail: null,
+        faultPercent: 0,
+        selectedInjuries: {
+            part1: null,
+            part2: null
+        },
+        selectedInjuryDetails: {}
+    };
+
+    // 폼 요소 초기화
+    document.getElementById('calculatorForm').reset();
+    document.getElementById('accidentDetails').style.display = 'none';
+    document.getElementById('injuryDetails').innerHTML = '';
+    document.getElementById('faultPercentInput').value = '0';
+    document.getElementById('faultGuide').textContent = '';
+}
+
+// 모달 관리
 function showResult(result) {
     // 금액 포맷팅 함수
     const formatAmount = (amount) => {
@@ -233,17 +279,9 @@ function showResult(result) {
     document.getElementById('resultModal').style.display = 'block';
 }
 
-// 모달 관련 함수들
 function closeModal() {
     document.getElementById('resultModal').style.display = 'none';
 }
-
-// ESC 키로 모달 닫기
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        closeModal();
-    }
-});
 
 // 모달 외부 클릭시 닫기
 document.addEventListener('click', function(event) {
@@ -253,76 +291,13 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// 폼 초기화
-function resetForm() {
-    formData = {
-        accidentType: '',
-        accidentDetail: null,
-        faultPercent: 0,
-        selectedInjuries: {
-            part1: null,
-            part2: null
-        },
-        selectedInjuryDetails: {}
-    };
-
-    // 폼 요소 초기화
-    document.getElementById('calculatorForm').reset();
-    document.getElementById('accidentDetails').style.display = 'none';
-    document.getElementById('injuryDetails').innerHTML = '';
-    document.getElementById('faultPercentInput').value = '0';
-}
-
-// 폼 제출 처리
-async function handleSubmit(event) {
-    event.preventDefault();
-
-    // 입력값 검증
-    if (!validateForm()) {
-        return;
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
     }
-    
-    // 폼 데이터 수집
-    const submitData = {
-        accident_type: formData.accidentType,
-        accident_description: formData.accidentDetail?.description,
-        accident_code: formData.accidentDetail?.code,
-        fault_percent: formData.faultPercent,
-        user_age: parseInt(document.getElementById('ageInput').value) || 0,
-        user_monthly_income: parseInt(document.getElementById('incomeInput').value) || 0,
-        job: document.querySelector('input[name="occupation"]:checked')?.value,
-        surgery: document.querySelector('input[name="surgery"]:checked')?.value === 'true',
-        hospitalization_days: parseInt(document.getElementById('hospitalizationDays').value) || 0,
-        treatment_days: parseInt(document.getElementById('outpatientDays').value) || 0,
-        insurance_type: document.querySelector('input[name="insuranceType"]:checked')?.value,
-        hospital_cost: parseInt(document.getElementById('hospitalCost').value) || 0,
-        treatment_cost: parseInt(document.getElementById('directPaymentCost').value) || 0,
-        injuries: Object.values(formData.selectedInjuryDetails)
-    };
-
-    try {
-        const response = await fetch('https://samulxcar-ing.com/caring/calculator', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(submitData)
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-            showResult(result);
-        } else {
-            alert('계산 중 오류가 발생했습니다.');
-        }
-    } catch (error) {
-        console.error('API 호출 오류:', error);
-        alert('서버 통신 중 오류가 발생했습니다.');
-    }
-}
-
-// 폼 검증 함수
+});
+// 폼 검증
 function validateForm() {
     const requiredFields = {
         accidentType: "사고유형을 선택해주세요.",
@@ -335,7 +310,6 @@ function validateForm() {
         directPaymentCost: "직불치료비를 입력해주세요."
     };
 
-    // 라디오 버튼 검증
     const radioGroups = {
         occupation: "직업을 선택해주세요.",
         surgery: "수술 여부를 선택해주세요.",
@@ -373,4 +347,92 @@ function validateForm() {
     }
 
     return isValid;
+}
+
+// 폼 제출 처리
+async function handleSubmit(event) {
+    event.preventDefault();
+    
+    if (!validateForm()) {
+        return;
+    }
+
+    // 폼 데이터 수집
+    const submitData = {
+        accident_type: formData.accidentType,
+        accident_description: formData.accidentDetail?.description,
+        accident_code: formData.accidentDetail?.code,
+        fault_percent: formData.faultPercent,
+        user_age: parseInt(document.getElementById('ageInput').value) || 0,
+        user_monthly_income: parseInt(document.getElementById('incomeInput').value) || 0,
+        job: document.querySelector('input[name="occupation"]:checked')?.value,
+        surgery: document.querySelector('input[name="surgery"]:checked')?.value === 'true',
+        hospitalization_days: parseInt(document.getElementById('hospitalizationDays').value) || 0,
+        treatment_days: parseInt(document.getElementById('outpatientDays').value) || 0,
+        insurance_type: document.querySelector('input[name="insuranceType"]:checked')?.value,
+        hospital_cost: parseInt(document.getElementById('hospitalCost').value) || 0,
+        treatment_cost: parseInt(document.getElementById('directPaymentCost').value) || 0,
+        injuries: Object.values(formData.selectedInjuryDetails)
+    };
+
+    try {
+        console.log('전송할 데이터:', submitData);
+
+        // API 호출 시도
+        const response = await fetch('https://samulxcar-ing.com/caring/calculator', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submitData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            showResult(result);
+        } else {
+            // API 오류 발생 시
+            console.error('API 오류:', result);
+            alert(`API 호출 중 오류가 발생했습니다.\n\n오류내용: ${result.message || '알 수 없는 오류'}`);
+            
+            // 테스트 데이터 표시
+            const testResult = {
+                success: true,
+                calculator_total: 10000000,
+                calculator_sub01: 2000000,  // 위자료
+                calculator_sub02: 1500000,  // 휴업 손해액
+                calculator_sub03: 500000,   // 교통비
+                calculator_sub05: 2000000,  // 직불 치료비
+                calculator_sub06: 1500000,  // 향후 치료비
+                calculator_sub07: 1000000,  // 간병비
+                calculator_sub09: 500000,   // 치료비 상계
+                calculator_sub10: 1000000   // 상실 수익
+            };
+            
+            alert('테스트 데이터로 결과를 표시합니다.');
+            showResult(testResult);
+        }
+    } catch (error) {
+        // 네트워크 오류 등 예외 발생 시
+        console.error('네트워크 오류:', error);
+        alert(`서버 연결 중 오류가 발생했습니다.\n\n오류내용: ${error.message}`);
+        
+        // 테스트 데이터 표시
+        const testResult = {
+            success: true,
+            calculator_total: 10000000,
+            calculator_sub01: 2000000,
+            calculator_sub02: 1500000,
+            calculator_sub03: 500000,
+            calculator_sub05: 2000000,
+            calculator_sub06: 1500000,
+            calculator_sub07: 1000000,
+            calculator_sub09: 500000,
+            calculator_sub10: 1000000
+        };
+        
+        alert('테스트 데이터로 결과를 표시합니다.');
+        showResult(testResult);
+    }
 }

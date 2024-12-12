@@ -65,22 +65,25 @@
                            placeholder="과실 비율 입력">
                     <span class="input-group-append">%</span>
                 </div>
+                <p id="faultGuide" class="guide-text"></p>
             </div>
 
             <!-- 부상 부위 선택 -->
             <div class="section">
                 <h2 class="section-title">부상 부위를 선택해주세요. (최대 2개) <span class="required">*</span></h2>
-                <div class="select-wrapper">
-                    <select id="injuryPart1" class="input" required>
-                        <option value="">첫 번째 부위 선택</option>
-                    </select>
+                <div id="injurySelections">
+                    <div class="select-wrapper">
+                        <select id="injuryPart1" class="input" required>
+                            <option value="">첫 번째 부위 선택</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper mt-2">
+                        <select id="injuryPart2" class="input">
+                            <option value="">두 번째 부위 선택 (선택사항)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="select-wrapper mt-2">
-                    <select id="injuryPart2" class="input">
-                        <option value="">두 번째 부위 선택 (선택사항)</option>
-                    </select>
-                </div>
-                <div id="injuryDetails" class="mt-4"></div>
+                <div id="injuryDetails" class="injury-details-container"></div>
             </div>
 
             <!-- 기본 정보 입력 -->
