@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사고 상담 접수</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">사고 상담 접수</h1>
+        </div>
+
+        <form id="consultationForm" onsubmit="handleSubmit(event)">
+            <!-- 사고유형 선택 -->
+            <div class="section">
+                <h2 class="section-title">사고유형 선택 <span class="required">*</span></h2>
+                <div class="select-wrapper">
+                    <select id="accidentType" class="input" required>
+                        <option value="">사고유형을 선택해주세요</option>
+                        <option value="교통사고">교통사고</option>
+                        <option value="업무중사고(산재)">업무중사고(산재)</option>
+                        <option value="일반상해(재해)">일반상해(재해)</option>
+                        <option value="질병사고">질병사고</option>
+                        <option value="배상책임">배상책임</option>
+                        <option value="화재사고">화재사고</option>
+                        <option value="재물사고">재물사고</option>
+                    </select>
+                </div>
+                <div id="accidentDetails" class="mt-4" style="display: none;">
+                    <select id="accidentDetail" class="input">
+                        <option value="">상세 유형을 선택해주세요</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 사고내용 -->
+            <div class="section">
+                <h2 class="section-title">사고내용 <span class="required">*</span></h2>
+                <div class="input-group">
+                    <textarea id="accidentDescription" class="input textarea" 
+                            placeholder="사고 경위와 피해 내용을 상세히 작성해 주세요." 
+                            required></textarea>
+                </div>
+            </div>
+
+            <!-- 피해자 정보 -->
+            <div class="section">
+                <h2 class="section-title">피해자 정보</h2>
+                <!-- 거주지 -->
+                <div class="input-group">
+                    <label class="input-label">거주지 <span class="required">*</span></label>
+                    <div class="grid-2">
+                        <select id="citySelect" class="input" required>
+                            <option value="">시/도 선택</option>
+                        </select>
+                        <select id="districtSelect" class="input" required>
+                            <option value="">시/군/구 선택</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 연락처 -->
+                <div class="input-group">
+                    <label class="input-label">연락처 <span class="required">*</span></label>
+                    <input type="tel" id="contactNumber" class="input" 
+                           placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" 
+                           pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}"
+                           required>
+                </div>
+            </div>
+
+            <!-- 보험 정보 -->
+            <div class="section">
+                <h2 class="section-title">보험 정보</h2>
+                <!-- 보험접수 상태 -->
+                <div class="input-group">
+                    <label class="input-label">보험접수 상태 <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="insuranceStatus" value="접수" required>
+                            접수
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="insuranceStatus" value="미접수">
+                            미접수
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 보험사 선택 -->
+                <div class="input-group" id="insuranceCompanyGroup">
+                    <label class="input-label">보험사</label>
+                    <select id="insuranceCompany" class="input">
+                        <option value="">보험사를 선택해주세요</option>
+                        <option value="삼성화재">삼성화재</option>
+                        <option value="현대해상">현대해상</option>
+                        <option value="KB손해보험">KB손해보험</option>
+                        <option value="메리츠화재">메리츠화재</option>
+                        <option value="DB손해보험">DB손해보험</option>
+                        <option value="한화손해보험">한화손해보험</option>
+                        <option value="롯데손해보험">롯데손해보험</option>
+                        <option value="흥국화재">흥국화재</option>
+                        <option value="하나손해보험">하나손해보험</option>
+                        <option value="AXA손해보험">AXA손해보험</option>
+                        <option value="MG손해보험">MG손해보험</option>
+                        <option value="캐롯손해보험">캐롯손해보험</option>
+                        <option value="공제보험">공제보험</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 진단 및 치료 정보 -->
+            <div class="section">
+                <h2 class="section-title">진단 및 치료 정보</h2>
+                <!-- 진단명 -->
+                <div class="input-group">
+                    <label class="input-label">진단명 <span class="required">*</span></label>
+                    <input type="text" id="diagnosis" class="input" 
+                           placeholder="진단명을 입력해주세요" required>
+                </div>
+
+                <!-- 치료 상태 -->
+                <div class="input-group">
+                    <label class="input-label">치료 상태</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="treatment" value="treatment">
+                            치료 중
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="hospitalization" value="hospitalization">
+                            입원
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="surgery" value="surgery">
+                            수술
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 문의내용 -->
+            <div class="section">
+                <h2 class="section-title">문의내용 <span class="required">*</span></h2>
+                <div class="input-group">
+                    <textarea id="question" class="input textarea" 
+                            placeholder="문의하실 내용을 상세히 작성해 주세요." 
+                            required></textarea>
+                </div>
+            </div>
+
+            <!-- 파일 업로드 -->
+            <div class="section">
+                <h2 class="section-title">사고 관련 자료</h2>
+                <div class="file-upload-container">
+                    <div class="file-upload">
+                        <label for="fileInput" class="file-upload-label">
+                            파일 선택 (이미지 또는 동영상)
+                        </label>
+                        <input type="file" id="fileInput" multiple 
+                               accept="image/*,video/*" 
+                               style="display: none;">
+                    </div>
+                    <div id="fileList" class="file-list"></div>
+                </div>
+                <p class="help-text">* 이미지나 동영상 파일을 선택해주세요.</p>
+            </div>
+
+            <button type="submit" class="submit-btn">상담 접수하기</button>
+        </form>
+    </div>
+
+    <script src="consultation.js"></script>
+</body>
+</html>
